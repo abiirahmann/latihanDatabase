@@ -1,5 +1,6 @@
 <?php
     require_once "connection.php";
+    session_start();
 
     $id= $_POST['id'];
     $nama= $_POST['nama'];
@@ -11,18 +12,25 @@
 
     // eksekusi perintah
     if($conn->query($sql) === true){
-        echo "<script>
-        alert('Berhasil update');
-        location.assign('halaman_buku_tamu.php');
+        $_SESSION['update_status']=1;
+        // $_SESSION['gagal_deh']= "alert alert-success alert-dismissible fade show";
+        $_SESSION['update_message']= '<strong> Berhasil!! <strong> Data berhasil diupdate';
+        header("location: halaman_buku_tamu.php" );
+        // echo "<script>
+        // alert('Berhasil update');
+        // location.assign('halaman_buku_tamu.php');
         
-        </script>";
+        // </script>";
     }else{
-        echo "<script>
-        alert('Gagal update');
-        location.assign('halaman_buku_tamu.php');
+        $_SESSION['update_status']=1;
+        // $_SESSION['gagal_deh']= "alert alert-danger alert-dismissible fade show";
+        $_SESSION['update_message']= '<strong> Gagal!! <strong> Data gagal diupdate';
+        header("location: halaman_buku_tamu.php" );
+        // echo "<script>
+        // alert('Gagal update');
+        // location.assign('halaman_buku_tamu.php');
         
-        </script>";
+        // </script>";
     }
-
 
 ?>
