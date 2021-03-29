@@ -1,6 +1,10 @@
 <?php
     require_once "connection.php";
     session_start();
+    
+    if(!isset($_SESSION['Masuk'])){
+        header("location: halaman_login.php");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -12,15 +16,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+    <style>
+        body{
+            background: ghostwhite;
+        }
+        .container{
+            padding: 150px;
+        }
+    
+    </style>
+
     <title>Buku Tamu</title>
     
 </head>
 <body>
-    <div class="container mt-2">
+    <div class="container container mt-2">
         <div class="card">
             <div class="card-header">
+                <a href="proses_logout.php">
+                    <button type="button" class="btn btn-warning btn-sm">LOG OUT</button>
+                </a><hr/> 
                 <h3>Form Input Buku Tamu</h3>
+                
             </div>
+            <?php 
+            if(isset($_SESSION['Masuk'])) {?>
+            <?php 
+            if($_SESSION['Masuk'] == 1){ ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert"><?=$_SESSION['login_message'];?>
+                </div>
+            <?php } ?>
+        <?php } ?>
             <div class="card-body">
                 <form action="proses_insert_buku_tamu.php" method="POST">
                     <div class="form-group">
@@ -50,50 +77,50 @@
                 <?php }
                     unset($_SESSION['update_status']);
                 ?>
-                
-                <table class="table table-bordered" id="myTable">
-                    <thead>
-                        <h5 align="center">BUKU TAMU</h5>
-                        <tr align="center">
-                            <th>No</th><th>No Id</th><th>Nama</th><th>Email</th><th>Pesan</th><th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            $sql = "SELECT * FROM tb_tamu ORDER BY id_tamu ASC";
-                            $result = $conn->query($sql);
-                                $no= 1;
-                            if($result->num_rows> 0){
-                                while($row= $result->fetch_assoc()){?>
-                                <tr>
-                                    <td><?=$no;?></td>
-                                    <td><?=$row['id_tamu'];?></td>
-                                    <td><?=$row['nama_tamu'];?></td>
-                                    <td><?=$row['email_tamu'];?></td>
-                                    <td><?=$row['pesan_tamu'];?></td>
-                                    <td align="center">
-                                        <a href="proses_delete_buku_tamu.php?idTamu=<?=$row['id_tamu'];?>" title="Hapus" class="btn btn-success btn-sm" onclick="return confirm('apakah anda yakin?')">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="myTable">
+                        <thead>
+                            <h5 align="center">BUKU TAMU</h5>
+                            <tr align="center">
+                                <th>No</th><th>No Id</th><th>Nama</th><th>Email</th><th>Pesan</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $sql = "SELECT * FROM tb_tamu ORDER BY id_tamu ASC";
+                                $result = $conn->query($sql);
+                                    $no= 1;
+                                if($result->num_rows> 0){
+                                    while($row= $result->fetch_assoc()){?>
+                                    <tr>
+                                        <td><?=$no;?></td>
+                                        <td><?=$row['id_tamu'];?></td>
+                                        <td><?=$row['nama_tamu'];?></td>
+                                        <td><?=$row['email_tamu'];?></td>
+                                        <td><?=$row['pesan_tamu'];?></td>
+                                        <td align="center">
+                                            <a href="proses_delete_buku_tamu.php?idTamu=<?=$row['id_tamu'];?>" title="Hapus" class="btn btn-success btn-sm" onclick="return confirm('apakah anda yakin?')">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
 
-                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="<?=$row['id_tamu'];?>" data-nama="<?=$row['nama_tamu'];?>" data-email="<?=$row['email_tamu'];?>" data-pesan="<?=$row['pesan_tamu'];?>">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" data-id="<?=$row['id_tamu'];?>" data-nama="<?=$row['nama_tamu'];?>" data-email="<?=$row['email_tamu'];?>" data-pesan="<?=$row['pesan_tamu'];?>">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-                                        <!-- <a href="halaman_edit_buku_tamu.php?idTamu=<?=$row['id_tamu'];?>" title="Ubah" class="btn btn-primary btn-sm disabled">
-                                            <i class="fa fa-edit"></i>
-                                        </a> -->
-                                    </td>
-                                </tr>
+                                            <!-- <a href="halaman_edit_buku_tamu.php?idTamu=<?=$row['id_tamu'];?>" title="Ubah" class="btn btn-primary btn-sm disabled">
+                                                <i class="fa fa-edit"></i>
+                                            </a> -->
+                                        </td>
+                                    </tr>
 
-                            <?php 
-                                    $no++;
-                        }
+                                <?php 
+                                        $no++;
                             }
-                        ?>
-                    </tbody>
-                
-                </table>
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
